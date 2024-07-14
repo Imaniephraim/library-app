@@ -1,0 +1,64 @@
+
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Book List</h2>
+<ul>
+    {% for book in books %}
+    <li><a href="{% url 'book_detail' pk=book.pk %}">{{ book.title }}</a></li>
+    {% endfor %}
+</ul>
+<a href="{% url 'book_add' %}">Add New Book</a>
+{% endblock %}
+<!-- library_app/templates/book_list.html -->
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+$(document).ready(function() {
+    // AJAX call to fetch books from API
+    $.ajax({
+        url: "{% url 'fetch_books_from_api' %}",
+        type: 'GET',
+        success: function(response) {
+            console.log(response);
+            // Process response data as needed
+        },
+        error: function(error) {
+            console.error('Error fetching books:', error);
+        }
+    });
+
+    // AJAX call to add a new book to API
+    $('#addBookForm').submit(function(event) {
+        event.preventDefault();
+        $.ajax({
+            url: "{% url 'add_book_to_api' %}",
+            type: 'POST',
+            data: $(this).serialize(),
+            success: function(response) {
+                console.log(response);
+                // Process success message or data
+            },
+            error: function(error) {
+                console.error('Error adding book:', error);
+            }
+        });
+    });
+});
+</script>
+
+<h2>Book List</h2>
+<ul>
+    
+</ul>
+
+<form id="addBookForm" method="post">
+    {% csrf_token %}
+    <label for="title">Title:</label>
+    <input type="text" id="title" name="title" required>
+    <label for="author">Author:</label>
+    <input type="text" id="author" name="author" required>
+    <label for="publication_date">Publication Date:</label>
+    <input type="date" id="publication_date" name="publication_date" required>
+    <button type="submit">Add Book</button>
+</form>

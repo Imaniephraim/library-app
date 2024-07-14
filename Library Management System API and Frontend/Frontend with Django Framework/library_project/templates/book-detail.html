@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>{{ book.title }}</h2>
+<p><strong>Author:</strong> {{ book.author }}</p>
+<p><strong>Publication Date:</strong> {{ book.publication_date }}</p>
+<a href="{% url 'book_update' pk=book.pk %}">Update</a>
+<form action="{% url 'book_delete' pk=book.pk %}" method="post">
+    {% csrf_token %}
+    <input type="submit" value="Delete">
+</form>
+{% endblock %}
